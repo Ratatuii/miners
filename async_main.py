@@ -5,15 +5,16 @@ import json
 import time
 import aiofiles
 import asyncio
+from fake_useragent import UserAgent
 from aiocsv import AsyncWriter
 
 start_time = time.time()
+ua = UserAgent()
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0',
+    'User-Agent': ua.random,
     'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3',
-    # 'Accept-Encoding': 'gzip, deflate, br',
     'Referer': 'https://moonarch.app/',
     'Version': '2.14.0',
     'Origin': 'https://moonarch.app',
