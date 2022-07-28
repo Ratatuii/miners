@@ -22,6 +22,13 @@ https://moonarch.app/miners.
 
 #### Для установки зависимостей - **pip install -r requirements.txt**
 
+
+### **Для запуска бота использовать файл telebot.py**
+
+## **Использовать свой TOKEN** 
+
 Чтобы передать переменную окружения в PyCharm, откройте сверху раздел **Run -> Edit Configurations** и добавьте в окне 
 **Environment Variables** переменную с именем **API_TOKEN** и значением токена
+
+## **либо просто вставить API_TOKEN = **~~getenv("API_TOKEN")~~** свой токен**
 
