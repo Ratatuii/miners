@@ -1,6 +1,5 @@
 import asyncio
 import json
-import time
 from os import getenv
 from sys import exit
 
@@ -9,7 +8,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.utils.exceptions import BotBlocked
 from aiogram.utils.markdown import hbold, hide_link
 
-from main import collect_data
+from async_main import collect_data
 
 API_TOKEN = getenv("API_TOKEN")
 if not API_TOKEN:
@@ -22,42 +21,19 @@ flag = True
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    start_buttons = ['Get miners', 'Stop', 'Get CSV', 'Get JSON']
+    start_buttons = ['Get CSV', 'Get all miners', 'Get JSON', 'Stop']
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*start_buttons)
-    chat_id = message.chat.id
+
     await message.answer("Hi!\nI'm MainerBot!\nPowered by aiogram.")
     await message.answer('Select categories', reply_markup=keyboard)
 
 
-@dp.message_handler(Text(equals='Stop'))
-async def get_mainers(message: types.Message):
-    await message.answer('<b>Bot</b> has been stopped')
-    await exit()
-
-
-@dp.message_handler(Text(equals='Get CSV'))
-async def get_mainers(message: types.Message):
-    await message.answer('Your CSV file ready: ')
-    # await bot.send_document(message.chat.id, open(result.csv, 'rb'))
-
-
-@dp.message_handler(Text(equals='Get JSON'))
-async def get_mainers(message: types.Message):
-    await message.answer('Your JSON file ready: ')
-
-
-@dp.errors_handler(exception=BotBlocked)
-async def error_bot_blocked(update: types.Update, exception: BotBlocked):
-    print(f"Меня заблокировал пользователь!\nСообщение: {update}\nОшибка: {exception}")
-    return True
-
-
-@dp.message_handler(Text(equals='Get miners'))
+@dp.message_handler(Text(equals='Get all miners'))
 async def get_mainers(message: types.Message):
     await message.answer('Please waiting...')
 
-    collect_data()
+    await collect_data()
 
     with open('result.json') as file:
         data = json.load(file)
@@ -82,7 +58,33 @@ async def get_mainers(message: types.Message):
 
         await message.answer(card)
 
-        await asyncio.sleep(5)
+        await asyncio.sleep(0.3)
+
+
+@dp.message_handler(Text(equals='Stop'))
+async def get_mainers(message: types.Message):
+    await message.answer('<b>Bot</b> has been stopped')
+    await exit()
+
+
+@dp.message_handler(Text(equals='Get CSV'))
+async def get_mainers(message: types.Message):
+    chat_id = message.chat.id
+    await message.answer('Your CSV file ready: ')
+    await bot.send_document(chat_id=chat_id, document=open('result.csv', 'rb'))
+
+
+@dp.message_handler(Text(equals='Get JSON'))
+async def get_mainers(message: types.Message):
+    chat_id = message.chat.id
+    await message.answer('Your JSON file ready: ')
+    await bot.send_document(chat_id=chat_id, document=open('result.json', 'rb'))
+
+
+@dp.errors_handler(exception=BotBlocked)
+async def error_bot_blocked(update: types.Update, exception: BotBlocked):
+    print(f"Меня заблокировал пользователь!\nСообщение: {update}\nОшибка: {exception}")
+    return True
 
 
 def main():
