@@ -69,6 +69,7 @@ async def get_mainers(message: types.Message):
 
 @dp.message_handler(Text(equals='Get CSV'))
 async def get_mainers(message: types.Message):
+    await collect_data()
     chat_id = message.chat.id
     await message.answer('Your CSV file ready: ')
     await bot.send_document(chat_id=chat_id, document=open('result.csv', 'rb'))
@@ -76,6 +77,7 @@ async def get_mainers(message: types.Message):
 
 @dp.message_handler(Text(equals='Get JSON'))
 async def get_mainers(message: types.Message):
+    await collect_data()
     chat_id = message.chat.id
     await message.answer('Your JSON file ready: ')
     await bot.send_document(chat_id=chat_id, document=open('result.json', 'rb'))
